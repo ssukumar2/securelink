@@ -1,6 +1,6 @@
 # securelink
 
-Secure handshake protocol server — ECC key exchange with ECDH shared secret and AES-256 encryption. Crypto primitives written in C for portability, application layer in C++.
+Secure handshake protocol server: ECC key exchange with ECDH shared secret and AES-256 encryption. Crypto primitives written in C for portability, application layer in C++.
 
 ## Status
 
