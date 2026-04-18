@@ -1,3 +1,5 @@
+![Build and Test](https://github.com/ssukumar2/securelink/actions/workflows/c-cpp.yml/badge.svg)
+
 # securelink
 
 Secure handshake protocol server: ECC key exchange with ECDH shared secret and AES-256 encryption. Crypto primitives written in C for portability, application layer in C++.
