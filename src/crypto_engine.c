@@ -158,3 +158,67 @@ int ecc_derive_shared_secret(const ecc_keypair_t* kp, const uint8_t* peer_pub, s
     return 32;
 }
 
+int aes256_ecb_encrypt(const uint8_t* key, const uint8_t* plaintext, size_t plaintext_len,
+                       uint8_t* out_cipher, size_t cipher_buf_len) 
+{
+    if (!key || !plaintext || !out_cipher) 
+        return -1;
+    if (plaintext_len % 16 != 0) 
+        return -1;
+    if (cipher_buf_len < plaintext_len) 
+        return -1;
+
+    EVP_CIPHER_CTX* ctx = EVP_CIPHER_CTX_new();
+
+    if (!ctx) 
+        return -1;
+
+    EVP_EncryptInit_ex(ctx, EVP_aes_256_ecb(), NULL, key, NULL);
+    EVP_CIPHER_CTX_set_padding(ctx, 0);
+
+    int out_len = 0;
+    int total = 0;
+
+    EVP_EncryptUpdate(ctx, out_cipher, &out_len, plaintext, (int)plaintext_len);
+    total += out_len;
+
+    EVP_EncryptFinal_ex(ctx, out_cipher + total, &out_len);
+    total += out_len;
+
+    EVP_CIPHER_CTX_free(ctx);
+    return total;
+}
+
+int aes256_ecb_decrypt(const uint8_t* key, const uint8_t* ciphertext, size_t ciphertext_len,
+                       uint8_t* out_plain, size_t plain_buf_len) 
+{
+    if (!key || !ciphertext || !out_plain) 
+        return -1;
+
+    if (ciphertext_len % 16 != 0) 
+        return -1;
+
+    if (plain_buf_len < ciphertext_len) 
+        return -1;
+
+    EVP_CIPHER_CTX* ctx = EVP_CIPHER_CTX_new();
+
+    if (!ctx) 
+        return -1;
+
+    EVP_DecryptInit_ex(ctx, EVP_aes_256_ecb(), NULL, key, NULL);
+    EVP_CIPHER_CTX_set_padding(ctx, 0);
+
+    int out_len = 0;
+    int total = 0;
+
+    EVP_DecryptUpdate(ctx, out_plain, &out_len, ciphertext, (int)ciphertext_len);
+    total += out_len;
+
+    EVP_DecryptFinal_ex(ctx, out_plain + total, &out_len);
+    total += out_len;
+
+    EVP_CIPHER_CTX_free(ctx);
+
+    return total;
+}

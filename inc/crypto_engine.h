@@ -41,6 +41,27 @@ int ecc_derive_shared_secret(const ecc_keypair_t* kp,
                              const uint8_t* peer_pub, size_t peer_pub_len,
                              uint8_t* out_secret, size_t secret_buf_len);
 
+/**
+ * AES-256-ECB encrypt.
+ * key must be 32 bytes. plaintext must be a multiple of 16 bytes.
+ * out_cipher must be at least plaintext_len bytes.
+ * Returns number of bytes written, or -1 on failure.
+ */
+int aes256_ecb_encrypt(const uint8_t* key,
+                       const uint8_t* plaintext, size_t plaintext_len,
+                       uint8_t* out_cipher, size_t cipher_buf_len);
+
+/**
+ * AES-256-ECB decrypt.
+ * key must be 32 bytes. ciphertext must be a multiple of 16 bytes.
+ * out_plain must be at least ciphertext_len bytes.
+ * Returns number of bytes written, or -1 on failure.
+ */
+int aes256_ecb_decrypt(const uint8_t* key,
+                       const uint8_t* ciphertext, size_t ciphertext_len,
+                       uint8_t* out_plain, size_t plain_buf_len);
+
+
 
 
 #ifdef __cplusplus
