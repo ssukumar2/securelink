@@ -14,6 +14,7 @@ add_executable(securelink_server
     src/main.cpp
     src/tcp_server.cpp
     src/crypto_engine.c
+    src/protocol_handler.cpp
 )
 
 target_include_directories(securelink_server PRIVATE inc)
