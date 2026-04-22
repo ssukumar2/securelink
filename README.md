@@ -1,4 +1,4 @@
-![Build and Test](https://github.com/ssukumar2/securelink/actions/workflows/c-cpp.yml/badge.svg)
+![Build and Test](https://github.com/ssukumar2/securelink/actions/workflows/build.yml/badge.svg)
 
 # securelink
 
