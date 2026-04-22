@@ -37,3 +37,17 @@ target_link_libraries(test_crypto PRIVATE
     ssl
     crypto
 )
+
+# Test client
+add_executable(test_client
+    src/test_client.cpp
+    src/crypto_engine.c
+)
+
+target_include_directories(test_client PRIVATE inc)
+
+target_link_libraries(test_client PRIVATE
+    ssl
+    crypto
+    pthread
+)
