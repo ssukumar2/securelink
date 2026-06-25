@@ -1,51 +1,53 @@
-[![Build](https://github.com/ssukumar2/securelink/actions/workflows/c-cpp.yml/badge.svg)](https://github.com/ssukumar2/securelink/actions/workflows/c-cpp.yml)
-
 # securelink
 
-A TCP server that implements a secure handshake protocol using ECC key exchange and AES-256 encryption. The crypto layer is written in pure C for portability, the application layer is in C++. Built with OpenSSL.
+A TCP server where two parties can talk privately and authentically. They do an ECDHE key exchange to agree on a shared secret, authenticate with Ed25519 identity keys, then encrypt every message with AES-256-GCM. Crypto is in C, the rest is C++. Built on OpenSSL.
 
-I built this to explore how secure key exchange actually works at the protocol level — not just calling a TLS library, but implementing the handshake myself: key generation, ECDH shared secret derivation, and symmetric encryption of a message.
+I started this to actually understand how secure key exchange works — not just call a TLS library. Once the handshake worked I kept going and added more layers around it.
 
 ## How it works
 
-When a client connects to the server on port 1234, it sends its ECC public key (64 bytes, using the secp256r1 curve). The server receives this key, generates its own ECC key pair, and uses both keys to derive a shared secret through ECDH. It then uses that shared secret as an AES-256-ECB key to encrypt a message. Finally, the server sends back its own public key along with the encrypted message. The client can then perform the same ECDH derivation on its side to get the same shared secret and decrypt the message.
+The handshake is basically TLS 1.3 stripped down: ClientHello and ServerHello carry random nonces, ephemeral ECDH public keys, and a cipher choice. The server sends its Ed25519 identity, signs the transcript, and both sides exchange a Finished MAC. After that, HKDF gives directional AES-256-GCM keys and every record is sealed with the AEAD. Sequence numbers feed a sliding-window replay guard.
 
-The whole exchange happens in a single TCP round trip — the client sends 64 bytes, the server responds with 80 bytes (64 for its public key plus 16 for the ciphertext).
+A session stays open and the app layer multiplexes many logical streams over it.
+
+## What's in here
+
+- **Crypto and handshake** — ECDHE P-256, Ed25519 identity, SHA-256 transcript, HKDF key schedule, AES-256-GCM AEAD, HMAC Finished
+- **Session lifecycle** — sealed records, replay guard, in-session rekey, encrypted resumption tickets, graceful close
+- **Protocol negotiation** — version selection, cipher suite registry, TLV extensions, structured diagnostic codes
+- **Streams** — many logical streams per session with flow control and priority scheduling
+- **RPC** — server-side dispatcher and client with futures, deadlines, cancel-all
+- **Pub/sub** — topic validator, wildcard subscriptions, per-identity ACLs, retained-message replay
+- **File transfer** — chunked streaming with CRC-32C, SHA-256 verify, resume bitmap, throttling
+- **Defenses** — replay guard, lockout, DoS caps, anomaly detector, threat score, intrusion monitor, audit log
+- **Observability** — Prometheus-style metrics, health checks, distributed tracing with W3C-style context
+- **Persistence** — append-only KV, atomic snapshots, event log, time series, replay harness
+- **Adversarial tests** — red-team scenarios for each defense (replay storm, AEAD tamper, downgrade, brute force, flood, fuzz, ACL bypass, intrusion escalation)
 
 ## Architecture
 
-The project mixes C and C++ on purpose. In real embedded security work, crypto primitives are often written in C so they can run on any platform — microcontrollers, FreeRTOS, bare metal, Linux. The application layer uses C++ for cleaner abstractions.
-
-The crypto engine is pure C and handles ECC key generation, ECDH shared secret derivation, and AES encrypt/decrypt through OpenSSL. It has no C++ dependencies and could theoretically run on an embedded target. The protocol handler is C++ and calls the C crypto API through extern "C" to implement the handshake logic. The TCP server is also C++ using POSIX sockets for handling client connections. A separate pure C test suite exercises the crypto engine independently.
-
-## Security notes
-
-The server uses secp256r1 (NIST P-256) for key exchange. AES-256-ECB is used for simplicity — production systems should use AES-GCM for authenticated encryption. New keys are generated per session so each handshake produces its own unique shared secret. There is no certificate validation in this implementation — a real system would add mutual authentication to prevent man-in-the-middle attacks.
+C handles anything touching keys, nonces, or wire bytes — could theoretically run on an embedded target with no C++ dependency. C++ handles orchestration: handshake engine, stream mux, RPC, pub/sub, sessions, observability. They talk through `extern "C"`.
 
 ## Stack
 
-- C11 for crypto primitives
-- C++17 for application layer
-- OpenSSL (libssl, libcrypto)
+- C11 for crypto and wire formats
+- C++17 for orchestration
+- OpenSSL 1.1+
 - POSIX sockets
-- CMake (mixed C/C++ build)
+- CMake
+- GitHub Actions CI
 
-## Building
+## Build and run
+cmake -B build
 
-    cmake -B build
-    cmake --build build
+cmake --build build
 
-## Running
+./build/securelink_server
 
-    ./build/securelink_server
-
-Listens on port 1234. Press Ctrl+C to stop.
+Listens on port 1234. Ctrl+C for a clean shutdown.
 
 ## Tests
-
-    ./build/test_crypto
-
-Ten tests covering key generation, ECDH shared secret derivation, AES encrypt/decrypt roundtrip, and key uniqueness.
+Plus a lot more across protocol, streams, RPC, pub/sub, file transfer, observability — and a set of adversarial test binaries (`attack_replay_storm`, `attack_aead_tamper`, `attack_record_fuzz`, etc.) that each exit non-zero if a defense fails to hold.
 
 ## License
 
