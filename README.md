@@ -10,6 +10,10 @@ The handshake is basically TLS 1.3 stripped down: ClientHello and ServerHello ca
 
 A session stays open and the app layer multiplexes many logical streams over it.
 
+Note: `main.cpp` is a minimal handshake demo using AES-256-ECB to keep the
+first end-to-end proof simple. The real sealed-record protocol used
+throughout the rest of the project is AES-256-GCM, implemented in `sl_aead.c`.
+
 ## What's in here
 
 - **Crypto and handshake** — ECDHE P-256, Ed25519 identity, SHA-256 transcript, HKDF key schedule, AES-256-GCM AEAD, HMAC Finished
