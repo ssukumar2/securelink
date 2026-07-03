@@ -5,7 +5,7 @@
 
 int main()
 {
-    const uint16_t port = 1234;
+    const uint16_t port = 1234; // arbitrary demo port, not a fixed protocol port
     const std::string secret = "U2VjbG91cyBHbWJI";
 
     std::cout << "securelink server" << std::endl;
