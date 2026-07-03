@@ -1,3 +1,6 @@
+/* Exercises crypto_engine.c primitives only: keypair, ECDH, ECB round-trip.
+ * The AEAD/session layer has its own separate test coverage. */
+
 #include "crypto_engine.h"
 #include <stdio.h>
 #include <string.h>
