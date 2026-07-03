@@ -11,6 +11,8 @@ int main()
     std::cout << "securelink server" << std::endl;
     std::cout << "  port:   " << port << std::endl;
     std::cout << "  curve:  secp256r1" << std::endl;
+    // Demo entry point only: uses ECB for a minimal handshake proof.
+    // Real record encryption is AES-256-GCM in sl_aead.c.
     std::cout << "  cipher: AES-256-ECB" << std::endl;
     std::cout << std::endl;
 
