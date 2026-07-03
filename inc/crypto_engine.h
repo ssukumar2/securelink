@@ -48,6 +48,7 @@ int ecc_derive_shared_secret(const ecc_keypair_t* kp,
  * Returns number of bytes written, or -1 on failure.
  */
 /* Demo-path cipher only. Production records use AES-256-GCM (see sl_aead.h). */
+/* Demo-path cipher only. Production records use AES-256-GCM (see sl_aead.h). */
 int aes256_ecb_encrypt(const uint8_t* key,
                        const uint8_t* plaintext, size_t plaintext_len,
                        uint8_t* out_cipher, size_t cipher_buf_len);
@@ -58,6 +59,7 @@ int aes256_ecb_encrypt(const uint8_t* key,
  * out_plain must be at least ciphertext_len bytes.
  * Returns number of bytes written, or -1 on failure.
  */
+/* Demo-path cipher only. Production records use AES-256-GCM (see sl_aead.h). */
 /* Demo-path cipher only. Production records use AES-256-GCM (see sl_aead.h). */
 int aes256_ecb_decrypt(const uint8_t* key,
                        const uint8_t* ciphertext, size_t ciphertext_len,
