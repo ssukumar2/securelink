@@ -59,7 +59,6 @@ int aes256_ecb_encrypt(const uint8_t* key,
  * Returns number of bytes written, or -1 on failure.
  */
 /* Demo-path cipher only. Production records use AES-256-GCM (see sl_aead.h). */
-/* Demo-path cipher only. Production records use AES-256-GCM (see sl_aead.h). */
 int aes256_ecb_decrypt(const uint8_t* key,
                        const uint8_t* ciphertext, size_t ciphertext_len,
                        uint8_t* out_plain, size_t plain_buf_len);
