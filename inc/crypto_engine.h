@@ -37,6 +37,11 @@ int ecc_get_public_key(const ecc_keypair_t* kp, uint8_t* out_buf, size_t buf_len
  * out_secret must be at least 32 bytes.
  * Returns the number of secret bytes written, or -1 on failure.
  */
+/**
+ * Derive the ECDH shared secret from our keypair and the peer's public key.
+ * Both sides call this with their own key and the other's public bytes,
+ * and land on the identical secret without ever transmitting it.
+ */
 int ecc_derive_shared_secret(const ecc_keypair_t* kp,
                              const uint8_t* peer_pub, size_t peer_pub_len,
                              uint8_t* out_secret, size_t secret_buf_len);
