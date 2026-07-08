@@ -1,3 +1,10 @@
+/* NOTE: This file currently uses the legacy EC_KEY OpenSSL API, which
+ * OpenSSL 3.0 marks as deprecated (-Wdeprecated-declarations warnings on
+ * build). It still works correctly today. Migrating to the newer EVP_PKEY-
+ * based API is tracked as a separate, larger piece of work, not a small
+ * commit — the calls are used consistently throughout this file and need
+ * careful testing together, not a quick swap. */
+
 #include "crypto_engine.h"
 
 #include <openssl/bn.h>
