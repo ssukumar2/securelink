@@ -44,6 +44,7 @@ int main()
     if (connect(sock, reinterpret_cast<struct sockaddr*>(&addr), sizeof(addr)) < 0)
     {
         std::cerr << "connection failed (is the server running?)" << std::endl;
+        close(sock);
         ecc_keypair_free(kp);
         return 1;
     }
