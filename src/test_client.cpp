@@ -30,6 +30,12 @@ int main()
 
     // Connect to server
     int sock = socket(AF_INET, SOCK_STREAM, 0);
+    if (sock < 0)
+    {
+        std::cerr << "failed to create socket" << std::endl;
+        ecc_keypair_free(kp);
+        return 1;
+    }
     struct sockaddr_in addr{};  // zero-initialized, avoids uninitialized padding bytes
     addr.sin_family = AF_INET;
     addr.sin_port = htons(1234);
