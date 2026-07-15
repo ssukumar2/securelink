@@ -30,7 +30,7 @@ int main()
 
     // Connect to server
     int sock = socket(AF_INET, SOCK_STREAM, 0);
-    struct sockaddr_in addr;
+    struct sockaddr_in addr{};  // zero-initialized, avoids uninitialized padding bytes
     addr.sin_family = AF_INET;
     addr.sin_port = htons(1234);
     inet_pton(AF_INET, "127.0.0.1", &addr.sin_addr);
