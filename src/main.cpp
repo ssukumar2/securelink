@@ -6,7 +6,9 @@
 int main()
 {
     const uint16_t port = 1234; // arbitrary demo port, not a fixed protocol port
-    const std::string secret = "U2VjbG91cyBHbWJI";
+    const std::string secret = "U2VjbG91cyBHbWJI";  // used as raw plaintext bytes,
+                                                       // not base64-decoded — the string
+                                                       // just happens to look like base64
 
     std::cout << "securelink server" << std::endl;
     std::cout << "  port:   " << port << std::endl;
