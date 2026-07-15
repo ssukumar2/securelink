@@ -38,7 +38,7 @@ int main()
     }
     struct sockaddr_in addr{};  // zero-initialized, avoids uninitialized padding bytes
     addr.sin_family = AF_INET;
-    addr.sin_port = htons(1234);
+    addr.sin_port = htons(1234);  // must match the demo port in main.cpp
     inet_pton(AF_INET, "127.0.0.1", &addr.sin_addr);
 
     if (connect(sock, reinterpret_cast<struct sockaddr*>(&addr), sizeof(addr)) < 0)
