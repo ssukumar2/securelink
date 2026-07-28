@@ -24,3 +24,6 @@ jobs:
 
       - name: Run crypto tests
         run: ./build/test_crypto
+
+      - name: Run adversarial tests
+        run: ./build/attack_aead_tamper
