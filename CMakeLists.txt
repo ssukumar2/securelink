@@ -52,3 +52,18 @@ target_link_libraries(test_client PRIVATE
     crypto
     pthread
 )
+
+# Adversarial test: AEAD tampering
+add_executable(attack_aead_tamper
+    src/attack_aead_tamper.c
+    src/sl_aead.c
+    src/sl_packet_mutator.c
+    src/sl_mem.c
+    src/sl_rng.c
+)
+
+target_include_directories(attack_aead_tamper PRIVATE inc)
+
+target_link_libraries(attack_aead_tamper PRIVATE
+    crypto
+)
