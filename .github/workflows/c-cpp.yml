@@ -27,3 +27,12 @@ jobs:
 
       - name: Run adversarial tests
         run: ./build/attack_aead_tamper
+
+      - name: Run replay storm attack
+        run: ./build/attack_replay_storm
+
+      - name: Run brute force attack
+        run: ./build/attack_brute_force
+
+      - name: Run DoS flood attack
+        run: ./build/attack_dos_flood
