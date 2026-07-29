@@ -53,6 +53,28 @@ target_link_libraries(test_client PRIVATE
     pthread
 )
 
+# Adversarial test: replay storm
+add_executable(attack_replay_storm
+    src/attack_replay_storm.cpp
+    src/attack_sim.cpp
+)
+target_include_directories(attack_replay_storm PRIVATE inc)
+target_link_libraries(attack_replay_storm PRIVATE pthread)
+
+# Adversarial test: credential brute force
+add_executable(attack_brute_force
+    src/attack_brute_force.c
+    src/sl_lockout.c
+)
+target_include_directories(attack_brute_force PRIVATE inc)
+
+# Adversarial test: connection flood / DoS
+add_executable(attack_dos_flood
+    src/attack_dos_flood.c
+    src/sl_dos_guard.c
+)
+target_include_directories(attack_dos_flood PRIVATE inc)
+
 # Adversarial test: AEAD tampering
 add_executable(attack_aead_tamper
     src/attack_aead_tamper.c
