@@ -41,8 +41,8 @@ public:
 
         if (seq > highest_) {
             advance_to(seq);
-            set_bit(seq);
             highest_ = seq;
+            set_bit(seq);
             ++accepted_;
             return true;
         }
