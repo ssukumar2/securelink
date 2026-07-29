@@ -12,7 +12,12 @@
  *       -o attack_dos_flood
  */
 
+/* struct timespec / nanosleep are POSIX, not standard C11 — same reasoning
+ * as the _POSIX_C_SOURCE fix in sl_dos_guard.c. */
+#define _POSIX_C_SOURCE 200809L
+
 #include <stdio.h>
+#include <time.h>
 
 #include "sl_dos_guard.h"
 
