@@ -33,7 +33,7 @@ int AttackSim::run_all(bool verbose) {
             o.evidence = std::string("threw: ") + e.what();
         }
         const auto t1 = std::chrono::steady_clock::now();
-        o.duration_us = (std::uint64_t)std::chrono::duration_cast
+        o.duration_us = (std::uint64_t)std::chrono::duration_cast<
                             std::chrono::microseconds>(t1 - t0).count();
         if (o.name.empty()) o.name = s.name;
 
