@@ -30,6 +30,7 @@ void sl_mut_flip_bit(sl_mut_rng_t *r, uint8_t *buf, size_t len) {
 }
 
 void sl_mut_flip_bits(sl_mut_rng_t *r, uint8_t *buf, size_t len, size_t n) {
+    if (!buf || len == 0) return;
     const uint64_t total_bits = (uint64_t)len * 8ULL;
     if ((uint64_t)n > total_bits) n = (size_t)total_bits;
 
@@ -51,6 +52,7 @@ void sl_mut_flip_bits(sl_mut_rng_t *r, uint8_t *buf, size_t len, size_t n) {
             for (size_t j = 0; j < used_count; ++j) {
                 if (used[j] == bit) { dup = 1; break; }
             }
+            if (!dup || ++retries >= 64) break;
         }
         buf[bit / 8] ^= (uint8_t)(1U << (bit % 8));
         if (used_count < sizeof(used) / sizeof(used[0])) {
