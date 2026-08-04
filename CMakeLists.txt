@@ -75,6 +75,26 @@ add_executable(attack_dos_flood
 )
 target_include_directories(attack_dos_flood PRIVATE inc)
 
+# Adversarial test: handshake downgrade
+add_executable(attack_handshake_downgrade
+    src/attack_handshake_downgrade.c
+    src/sl_version.c
+)
+target_include_directories(attack_handshake_downgrade PRIVATE inc)
+
+# Adversarial test: random record corruption (fuzzing)
+add_executable(attack_record_fuzz
+    src/attack_record_fuzz.c
+    src/sl_record.c
+    src/sl_aead.c
+    src/sl_nonce.c
+    src/sl_mem.c
+    src/sl_rng.c
+    src/sl_packet_mutator.c
+)
+target_include_directories(attack_record_fuzz PRIVATE inc)
+target_link_libraries(attack_record_fuzz PRIVATE crypto)
+
 # Adversarial test: AEAD tampering
 add_executable(attack_aead_tamper
     src/attack_aead_tamper.c
