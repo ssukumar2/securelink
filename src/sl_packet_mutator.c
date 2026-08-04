@@ -30,7 +30,35 @@ void sl_mut_flip_bit(sl_mut_rng_t *r, uint8_t *buf, size_t len) {
 }
 
 void sl_mut_flip_bits(sl_mut_rng_t *r, uint8_t *buf, size_t len, size_t n) {
-    for (size_t i = 0; i < n; ++i) sl_mut_flip_bit(r, buf, len);
+    if (!buf || len == 0) return;
+    const uint64_t total_bits = (uint64_t)len * 8ULL;
+    if ((uint64_t)n > total_bits) n = (size_t)total_bits;
+
+    /* Guard against picking the same bit position twice in one call —
+     * two flips on the same bit cancel out via XOR, silently producing
+     * a net no-op mutation that would make a fuzz test falsely believe
+     * it exercised a corrupted record. Track positions already used
+     * this call and re-roll on a duplicate. Small fixed bound is fine:
+     * callers request a handful of flips, never hundreds. */
+    uint64_t used[64];
+    size_t used_count = 0;
+
+    for (size_t i = 0; i < n; ++i) {
+        uint64_t bit;
+        int retries = 0;
+        for (;;) {
+            bit = bounded(r, total_bits);
+            int dup = 0;
+            for (size_t j = 0; j < used_count; ++j) {
+                if (used[j] == bit) { dup = 1; break; }
+            }
+            if (!dup || ++retries >= 64) break;
+        }
+        buf[bit / 8] ^= (uint8_t)(1U << (bit % 8));
+        if (used_count < sizeof(used) / sizeof(used[0])) {
+            used[used_count++] = bit;
+        }
+    }
 }
 
 int sl_mut_overwrite(sl_mut_rng_t *r, uint8_t *buf, size_t len,

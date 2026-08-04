@@ -28,7 +28,10 @@ uint64_t sl_mut_rng_next(sl_mut_rng_t *r);
 /* Flip a single random bit in `buf`. */
 void sl_mut_flip_bit(sl_mut_rng_t *r, uint8_t *buf, size_t len);
 
-/* Flip up to `n` random bits in `buf`. */
+/* Flip exactly n DISTINCT random bits in `buf` (n is capped at the
+ * buffer's total bit count). Duplicate positions are never reused
+ * within one call, so the result is guaranteed to actually differ
+ * from the input whenever n >= 1. */
 void sl_mut_flip_bits(sl_mut_rng_t *r, uint8_t *buf, size_t len, size_t n);
 
 /* Overwrite `len_overwrite` bytes starting at `offset` with random data.
