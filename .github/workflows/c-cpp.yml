@@ -36,3 +36,9 @@ jobs:
 
       - name: Run DoS flood attack
         run: ./build/attack_dos_flood
+
+      - name: Run handshake downgrade attack
+        run: ./build/attack_handshake_downgrade
+
+      - name: Run record fuzz attack
+        run: ./build/attack_record_fuzz
