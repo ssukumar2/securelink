@@ -18,6 +18,7 @@
 
 #include "attack_sim.hpp"
 #include "topic_acl.hpp"
+#include "sl_topic.h"
 
 using namespace securelink;
 using namespace securelink::attacks;
