@@ -95,6 +95,27 @@ add_executable(attack_record_fuzz
 target_include_directories(attack_record_fuzz PRIVATE inc)
 target_link_libraries(attack_record_fuzz PRIVATE crypto)
 
+# Adversarial test: stealthy intrusion pattern (threat scoring over time)
+add_executable(attack_intrusion_pattern
+    src/attack_intrusion_pattern.cpp
+    src/attack_sim.cpp
+    src/intrusion_monitor.cpp
+    src/threat_score.cpp
+    src/anomaly_detector.cpp
+)
+target_include_directories(attack_intrusion_pattern PRIVATE inc)
+target_link_libraries(attack_intrusion_pattern PRIVATE pthread)
+
+# Adversarial test: pub/sub topic ACL bypass
+add_executable(attack_topic_acl_bypass
+    src/attack_topic_acl_bypass.cpp
+    src/attack_sim.cpp
+    src/topic_acl.cpp
+    src/sl_topic.c
+)
+target_include_directories(attack_topic_acl_bypass PRIVATE inc)
+target_link_libraries(attack_topic_acl_bypass PRIVATE pthread)
+
 # Adversarial test: AEAD tampering
 add_executable(attack_aead_tamper
     src/attack_aead_tamper.c

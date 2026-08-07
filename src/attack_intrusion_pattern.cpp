@@ -13,6 +13,8 @@
 //       -lpthread -o attack_intrusion_pattern
 
 #include <cstdio>
+#include <thread>
+#include <thread>
 
 #include "attack_sim.hpp"
 #include "intrusion_monitor.hpp"
@@ -85,7 +87,7 @@ static ScenarioOutcome scenario_decay_recovers() {
     mon.report_replay(peer);
     mon.report_replay(peer);
     if (!mon.decision_for(peer).block) {
-        return inconclusive("decay_recovers",
+        return incon("decay_recovers",
             "expected to be blocked after two replays");
     }
     // Sleep long enough for the score to decay past the threshold.

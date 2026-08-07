@@ -42,3 +42,9 @@ jobs:
 
       - name: Run record fuzz attack
         run: ./build/attack_record_fuzz
+
+      - name: Run intrusion pattern attack
+        run: ./build/attack_intrusion_pattern
+
+      - name: Run topic ACL bypass attack
+        run: ./build/attack_topic_acl_bypass

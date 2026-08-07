@@ -26,14 +26,18 @@ bool AnomalyDetector::observe(double value) {
         return false;
     }
 
-    // EWMA update of mean and variance.
+    // Score this observation against the statistics as they stood BEFORE
+    // this sample. Updating mean_/var_ first would let a large outlier
+    // inflate its own sigma and hide from the very z-score meant to
+    // catch it -- the outlier would poison the baseline used to judge it.
     const double diff = value - mean_;
+    const double sigma_before = std::sqrt(var_);
+    last_z_ = (sigma_before > 0.0) ? (diff / sigma_before) : 0.0;
+
+    // Now fold this sample into the running mean/variance for next time.
     const double incr = alpha_ * diff;
     mean_ += incr;
     var_  = (1.0 - alpha_) * (var_ + alpha_ * diff * diff);
-
-    const double sigma = std::sqrt(var_);
-    last_z_ = (sigma > 0.0) ? (value - mean_) / sigma : 0.0;
 
     if (n_ <= warmup_) return false;
     const bool anomalous = std::fabs(last_z_) > z_threshold_;
