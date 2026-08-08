@@ -1,7 +1,18 @@
 #include "protocol_handler.hpp"
 #include "tcp_server.hpp"
 
+#include <csignal>
 #include <iostream>
+
+namespace {
+TcpServer* g_server = nullptr;
+
+void handle_sigint(int) {
+    // close() and setting an atomic flag are both async-signal-safe;
+    // avoid doing anything else (like std::cout) directly in a handler.
+    if (g_server) g_server->stop();
+}
+}  // namespace
 
 int main()
 {
@@ -21,6 +32,9 @@ int main()
     ProtocolHandler handler(secret);
     TcpServer server(port);
 
+    g_server = &server;
+    std::signal(SIGINT, handle_sigint);
+
     server.run([&](const std::vector<uint8_t>& client_data) {
         std::cout << "handshake started (" << client_data.size()
                   << " bytes)" << std::endl;
@@ -30,5 +44,6 @@ int main()
         return response;
     });
 
+    std::cout << "server shut down cleanly" << std::endl;
     return 0;
 }

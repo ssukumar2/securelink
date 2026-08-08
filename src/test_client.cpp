@@ -5,6 +5,7 @@
 
 #include <cstdint>
 #include <cstring>
+#include <cerrno>
 #include <iostream>
 #include <vector>
 
@@ -56,7 +57,10 @@ int main()
 
     // Receive server response: pubkey[64] + ciphertext[16]
     uint8_t response[80];
-    ssize_t received = recv(sock, response, sizeof(response), 0);
+    ssize_t received;
+    do {
+        received = recv(sock, response, sizeof(response), 0);
+    } while (received < 0 && errno == EINTR);
     close(sock);
 
     if (received != 80)
