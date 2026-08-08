@@ -1,5 +1,6 @@
 #pragma once
 
+#include <atomic>
 #include <cstdint>
 #include <functional>
 #include <string>
@@ -22,6 +23,6 @@ public:
 private:
     uint16_t port_;
     int server_fd_{-1};
-    bool running_{false};
+    std::atomic<bool> running_{false};
     
 };
