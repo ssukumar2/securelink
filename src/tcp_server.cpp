@@ -6,6 +6,7 @@
 #include <unistd.h>
 
 #include <cstring>
+#include <cerrno>
 #include <iostream>
 #include <stdexcept>
 
@@ -45,7 +46,10 @@ void TcpServer::run(HandlerFn handler)
     {
         sockaddr_in client_addr{};
         socklen_t client_len = sizeof(client_addr);
-        int client_fd = accept(server_fd_, reinterpret_cast<sockaddr*>(&client_addr), &client_len);
+        int client_fd;
+        do {
+            client_fd = accept(server_fd_, reinterpret_cast<sockaddr*>(&client_addr), &client_len);
+        } while (client_fd < 0 && errno == EINTR);
         if (client_fd < 0) {
             if (!running_) break;
             std::cerr << "accept failed" << std::endl;
@@ -56,8 +60,18 @@ void TcpServer::run(HandlerFn handler)
         inet_ntop(AF_INET, &client_addr.sin_addr, client_ip, sizeof(client_ip));
         std::cout << "client connected from " << client_ip << std::endl;
 
+        // NOTE: a single recv() call is not guaranteed to return the whole
+        // message on a real network -- TCP is a byte stream, not message-
+        // oriented, and a small write can arrive split across packets.
+        // This works reliably here because messages are small (64/80
+        // bytes) and this demo runs over loopback, but a production
+        // version would need either a length-prefixed framing scheme or
+        // a loop that reads until a known expected size is reached.
         std::vector<uint8_t> buffer(1024);
-        ssize_t bytes_read = recv(client_fd, buffer.data(), buffer.size(), 0);
+        ssize_t bytes_read;
+        do {
+            bytes_read = recv(client_fd, buffer.data(), buffer.size(), 0);
+        } while (bytes_read < 0 && errno == EINTR);
         
         if (bytes_read <= 0) 
         {
