@@ -10,6 +10,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 find_package(OpenSSL REQUIRED)
 
+enable_testing()
+
 # Server binary
 add_executable(securelink_server
     src/main.cpp
@@ -130,3 +132,15 @@ target_include_directories(attack_aead_tamper PRIVATE inc)
 target_link_libraries(attack_aead_tamper PRIVATE
     crypto
 )
+# Register everything with ctest, so `ctest --output-on-failure` runs the
+# full suite in one command. Adding a future attack only needs one line
+# here, no separate CI step required.
+add_test(NAME test_crypto              COMMAND test_crypto)
+add_test(NAME attack_aead_tamper       COMMAND attack_aead_tamper)
+add_test(NAME attack_replay_storm      COMMAND attack_replay_storm)
+add_test(NAME attack_brute_force       COMMAND attack_brute_force)
+add_test(NAME attack_dos_flood         COMMAND attack_dos_flood)
+add_test(NAME attack_handshake_downgrade COMMAND attack_handshake_downgrade)
+add_test(NAME attack_record_fuzz       COMMAND attack_record_fuzz)
+add_test(NAME attack_intrusion_pattern COMMAND attack_intrusion_pattern)
+add_test(NAME attack_topic_acl_bypass  COMMAND attack_topic_acl_bypass)
