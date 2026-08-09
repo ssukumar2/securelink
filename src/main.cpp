@@ -34,6 +34,10 @@ int main()
 
     g_server = &server;
     std::signal(SIGINT, handle_sigint);
+    // Belt-and-suspenders alongside MSG_NOSIGNAL on the actual send()
+    // call: ignore SIGPIPE process-wide so any future write to a closed
+    // socket fails with EPIPE instead of being able to kill the server.
+    std::signal(SIGPIPE, SIG_IGN);
 
     server.run([&](const std::vector<uint8_t>& client_data) {
         std::cout << "handshake started (" << client_data.size()
