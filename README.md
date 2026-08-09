@@ -48,7 +48,13 @@ cmake --build build
 
 ./build/securelink_server
 
-Listens on port 1234. Ctrl+C for a clean shutdown.
+Listens on port 1234. Ctrl+C for a clean shutdown (a real SIGINT handler,
+not just an abrupt kill).
+
+The server also retries `recv`/`accept` on `EINTR` instead of treating an
+interrupted syscall as a hard error, and a client disconnecting mid-response
+fails with `EPIPE` instead of being able to take the whole process down
+with `SIGPIPE`.
 
 ## Tests
 
