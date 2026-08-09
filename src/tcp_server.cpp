@@ -86,7 +86,12 @@ void TcpServer::run(HandlerFn handler)
         try 
         {
             std::vector<uint8_t> response = handler(buffer);
-            send(client_fd, response.data(), response.size(), 0);
+            // MSG_NOSIGNAL: if the peer already disconnected, this makes
+            // send() fail with EPIPE (which the caller can log) instead
+            // of raising SIGPIPE, whose default action terminates the
+            // whole process -- one disconnected client should never be
+            // able to take the server down.
+            send(client_fd, response.data(), response.size(), MSG_NOSIGNAL);
             std::cout << "sent " << response.size() << " bytes" << std::endl;
         } 
         catch (const std::exception& e) 
