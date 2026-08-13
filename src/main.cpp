@@ -12,6 +12,15 @@ void handle_sigint(int) {
     // avoid doing anything else (like std::cout) directly in a handler.
     if (g_server) g_server->stop();
 }
+
+// Clears g_server when it goes out of scope -- guarantees the signal
+// handler can never dereference a dangling pointer after `server` is
+// destroyed, no matter how main() exits (normal return, early return,
+// or an exception unwinding the stack).
+struct GlobalServerGuard {
+    explicit GlobalServerGuard(TcpServer* s) { g_server = s; }
+    ~GlobalServerGuard() { g_server = nullptr; }
+};
 }  // namespace
 
 int main()
@@ -32,7 +41,7 @@ int main()
     ProtocolHandler handler(secret);
     TcpServer server(port);
 
-    g_server = &server;
+    GlobalServerGuard server_guard(&server);
     std::signal(SIGINT, handle_sigint);
     // Belt-and-suspenders alongside MSG_NOSIGNAL on the actual send()
     // call: ignore SIGPIPE process-wide so any future write to a closed
