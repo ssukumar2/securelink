@@ -13,8 +13,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install OpenSSL
-        run: sudo apt-get update && sudo apt-get install -y libssl-dev
+      - name: Install OpenSSL and cppcheck
+        run: sudo apt-get update && sudo apt-get install -y libssl-dev cppcheck
+
+      - name: Static analysis (cppcheck)
+        run: |
+          cppcheck --enable=warning,performance,portability --error-exitcode=1 --std=c11 --language=c -Iinc src/*.c
+          cppcheck --enable=warning,performance,portability --error-exitcode=1 --std=c++17 --language=c++ -Iinc src/*.cpp
 
       - name: Configure
         run: cmake -B build
