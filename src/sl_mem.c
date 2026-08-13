@@ -18,8 +18,11 @@ int sl_ct_equal(const void *a, const void *b, size_t n) {
     for (size_t i = 0; i < n; ++i) {
         diff |= (uint8_t)(pa[i] ^ pb[i]);
     }
-    /* Map nonzero -> 0, zero -> 1 without a branch. */
-    return (int)((1U & ((uint32_t)diff - 1U) >> 8) & 1U);
+    /* Map nonzero -> 0, zero -> 1, without a branch. Parens made explicit
+     * around the shift -- ">>" binds tighter than "&" in C, but relying
+     * on that silently is a classic source of confusion in bit tricks
+     * like this one. */
+    return (int)(1U & (((uint32_t)diff - 1U) >> 8));
 }
 
 void sl_xor_inplace(uint8_t *dst, const uint8_t *src, size_t n) {
