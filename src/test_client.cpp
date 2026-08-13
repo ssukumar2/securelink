@@ -102,7 +102,7 @@ int main()
     std::string message(reinterpret_cast<char*>(decrypted), 16);
     // Trim null padding
     size_t end = message.find('\0');
-    if (end != std::string::npos) message = message.substr(0, end);
+    if (end != std::string::npos) message.resize(end);
 
     std::cout << "decrypted message: " << message << std::endl;
 
