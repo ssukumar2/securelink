@@ -30,6 +30,15 @@ void on_signal(int) {
     if (g_client) g_client->stop();
 }
 
+// Clears g_client on scope exit -- main() has multiple early-return
+// paths and a try/catch around it, and cppcheck correctly flagged that
+// a signal firing after any of those exits (but before process teardown
+// finishes) would dereference a dangling pointer without this.
+struct GlobalClientGuard {
+    explicit GlobalClientGuard(securelink::BeaconClient* c) { g_client = c; }
+    ~GlobalClientGuard() { g_client = nullptr; }
+};
+
 int derive_from_secret(const std::string& secret,
                        std::uint8_t key[SL_AEAD_KEY_LEN],
                        std::uint8_t iv [SL_AEAD_IV_LEN]) {
@@ -106,7 +115,7 @@ int main(int argc, char** argv) try {
                  id_hex, cfg.host.c_str(), cfg.port, cfg.interval_ms);
 
     securelink::BeaconClient client(std::move(cfg));
-    g_client = &client;
+    GlobalClientGuard client_guard(&client);
     std::signal(SIGINT,  on_signal);
     std::signal(SIGTERM, on_signal);
 

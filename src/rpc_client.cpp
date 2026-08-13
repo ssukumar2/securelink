@@ -16,7 +16,7 @@ RpcClient::~RpcClient() {
 }
 
 std::future<RpcReply> RpcClient::call(const std::string& method,
-                                      std::vector<std::uint8_t> body,
+                                      const std::vector<std::uint8_t>& body,
                                       std::uint32_t timeout_ms) {
     std::promise<RpcReply> p;
     auto fut = p.get_future();
