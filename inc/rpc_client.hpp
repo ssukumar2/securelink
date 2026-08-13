@@ -46,7 +46,7 @@ public:
     // response arrives or the timeout fires. timeout_ms == 0 disables
     // the timeout (caller must still cancel on shutdown).
     std::future<RpcReply> call(const std::string& method,
-                               std::vector<std::uint8_t> body,
+                               const std::vector<std::uint8_t>& body,
                                std::uint32_t timeout_ms = 5000);
 
     // Feed inbound wire bytes (one encoded response). Matches against
