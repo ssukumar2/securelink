@@ -10,7 +10,7 @@ PubSubBroker::PubSubBroker(std::shared_ptr<TopicAcl> acl)
 std::vector<PubSubDelivery> PubSubBroker::publish(
     const TopicAcl::Fingerprint& publisher,
     const std::string&           topic,
-    std::vector<std::uint8_t>    payload,
+    const std::vector<std::uint8_t>& payload,
     bool                         retain) {
     if (!sl_topic_is_valid_publish(topic.c_str(), topic.size())) {
         std::lock_guard<std::mutex> lock(mu_);

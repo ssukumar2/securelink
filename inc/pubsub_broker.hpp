@@ -48,7 +48,7 @@ public:
     std::vector<PubSubDelivery> publish(
         const TopicAcl::Fingerprint& publisher,
         const std::string&           topic,
-        std::vector<std::uint8_t>    payload,
+        const std::vector<std::uint8_t>& payload,
         bool                         retain = false);
 
     // Subscribe `sub_id` (identified by `subscriber_fp`) to `filter`.
