@@ -45,6 +45,7 @@ public:
         std::uint64_t publishes_received = 0;
         std::uint64_t handler_misses     = 0;
         std::uint64_t send_failures      = 0;
+        std::uint64_t handler_exceptions = 0;
     };
     Stats stats() const;
 
