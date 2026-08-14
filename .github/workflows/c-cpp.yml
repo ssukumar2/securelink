@@ -53,3 +53,27 @@ jobs:
 
       - name: Run topic ACL bypass attack
         run: ./build/attack_topic_acl_bypass
+
+  sanitizers:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install OpenSSL
+        run: sudo apt-get update && sudo apt-get install -y libssl-dev
+
+      - name: Configure with ASan + UBSan
+        run: |
+          cmake -B build_asan \
+            -DCMAKE_C_FLAGS="-fsanitize=address,undefined -g" \
+            -DCMAKE_CXX_FLAGS="-fsanitize=address,undefined -g" \
+            -DCMAKE_EXE_LINKER_FLAGS="-fsanitize=address,undefined"
+
+      - name: Build
+        run: cmake --build build_asan
+
+      - name: Run full suite under sanitizers
+        run: |
+          cd build_asan
+          ctest --output-on-failure
