@@ -86,7 +86,11 @@ void EventLoop::drain_posted() {
         local.swap(posted_);
     }
     for (auto& t : local) {
-        try { t(); } catch (...) {}
+        try {
+            t();
+        } catch (...) {
+            ++posted_task_exceptions_;
+        }
     }
 }
 

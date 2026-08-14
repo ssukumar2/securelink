@@ -108,7 +108,18 @@ bool PubSubClient::on_message(const std::vector<std::uint8_t>& wire_bytes) {
         if (to_invoke.empty()) ++stats_.handler_misses;
     }
     for (auto& h : to_invoke) {
-        try { h(topic, payload); } catch (...) {}
+        try {
+            h(topic, payload);
+        } catch (...) {
+            // Deliberately still don't propagate or crash on a bad handler
+            // -- one misbehaving subscriber shouldn't take down delivery
+            // to the others. But silently discarding the exception with
+            // zero visibility made this indistinguishable from "handler
+            // ran fine and did nothing," which is exactly the kind of
+            // thing that's impossible to debug later. Count it instead.
+            std::lock_guard<std::mutex> lock(mu_);
+            ++stats_.handler_exceptions;
+        }
     }
     return true;
 }

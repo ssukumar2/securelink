@@ -53,6 +53,12 @@ public:
     bool running() const { return running_.load(); }
     std::size_t fd_count() const { return entries_.size(); }
 
+    // Count of posted tasks that threw. Tasks run under a catch-all so
+    // one bad task can't take the loop down, but that used to make a
+    // throwing task indistinguishable from one that ran and did nothing
+    // -- this makes it observable without changing that behavior.
+    std::uint64_t posted_task_exceptions() const { return posted_task_exceptions_.load(); }
+
 private:
     struct Entry {
         std::uint32_t events;
@@ -65,6 +71,7 @@ private:
     std::unordered_map<int, Entry> entries_;
     std::mutex                     post_mu_;
     std::vector<PostedTask>        posted_;
+    std::atomic<std::uint64_t>     posted_task_exceptions_{0};
 };
 
 }  // namespace securelink
