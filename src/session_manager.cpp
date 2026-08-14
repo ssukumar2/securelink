@@ -76,7 +76,7 @@ std::vector<std::uint8_t> SessionManager::issue_ticket(
 }
 
 std::optional<sl_ticket_body_t> SessionManager::consume_ticket(
-    const std::array<std::uint8_t, 32>& stk,
+    const SessionTicketKey& stk,
     const std::vector<std::uint8_t>&    ticket_bytes) {
     if (ticket_bytes.size() != SL_TICKET_TOTAL_LEN) return std::nullopt;
     sl_ticket_body_t body{};

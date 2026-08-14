@@ -93,7 +93,7 @@ public:
 
     // Try to resume from a ticket. Returns nullopt if invalid/expired.
     std::optional<sl_ticket_body_t> consume_ticket(
-        const std::array<std::uint8_t, 32>& stk,
+        const SessionTicketKey& stk,
         const std::vector<std::uint8_t>&    ticket_bytes);
 
     void close_session(std::uint64_t id);
