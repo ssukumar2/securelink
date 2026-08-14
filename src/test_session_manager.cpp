@@ -71,8 +71,8 @@ static int test_ticket_roundtrip(void) {
     SessionManager mgr(SessionManagerConfig{});
     auto id = mgr.register_session("d", make_identity(4));
 
-    std::array<std::uint8_t, 32> stk{}; stk[0] = 0xAA;
-    std::array<std::uint8_t, 32> rs{};  for (int i = 0; i < 32; ++i) rs[i] = (uint8_t)i;
+    SessionManager::SessionTicketKey stk{}; stk.bytes[0] = 0xAA;
+    SessionManager::ResumptionSecret rs{};  for (int i = 0; i < 32; ++i) rs.bytes[i] = (uint8_t)i;
 
     auto wire = mgr.issue_ticket(id, stk, rs);
     CHECK(!wire.empty());
