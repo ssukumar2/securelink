@@ -67,12 +67,29 @@ public:
     void note_rekey_local(std::uint64_t id);
     void note_rekey_peer (std::uint64_t id);
 
+    // Distinct types for two same-sized 32-byte secrets that must never
+    // be confused: the session ticket key (STK) is what ENCRYPTS a
+    // ticket; the resumption secret is DATA embedded inside it. Both
+    // were previously plain std::array<uint8_t,32> parameters -- a
+    // caller could swap them and the compiler would never notice, which
+    // would leak the server's ticket key to the client inside what's
+    // supposed to be an opaque ticket. Distinct types make that a
+    // compile error instead of a silent security bug.
+    struct SessionTicketKey {
+        std::array<std::uint8_t, 32> bytes{};
+        const std::uint8_t* data() const { return bytes.data(); }
+    };
+    struct ResumptionSecret {
+        std::array<std::uint8_t, 32> bytes{};
+        const std::uint8_t* data() const { return bytes.data(); }
+    };
+
     // Issue a ticket bound to the session's identity and a caller-provided
     // resumption secret. Returns the sealed wire bytes.
     std::vector<std::uint8_t> issue_ticket(
         std::uint64_t id,
-        const std::array<std::uint8_t, 32>& stk,
-        const std::array<std::uint8_t, 32>& resumption_secret);
+        const SessionTicketKey& stk,
+        const ResumptionSecret& resumption_secret);
 
     // Try to resume from a ticket. Returns nullopt if invalid/expired.
     std::optional<sl_ticket_body_t> consume_ticket(

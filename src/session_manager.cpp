@@ -58,8 +58,8 @@ void SessionManager::note_rekey_peer(std::uint64_t id) {
 
 std::vector<std::uint8_t> SessionManager::issue_ticket(
     std::uint64_t id,
-    const std::array<std::uint8_t, 32>& stk,
-    const std::array<std::uint8_t, 32>& resumption_secret) {
+    const SessionTicketKey& stk,
+    const ResumptionSecret& resumption_secret) {
     std::lock_guard<std::mutex> lock(mu_);
     auto it = sessions_.find(id);
     if (it == sessions_.end()) return {};
