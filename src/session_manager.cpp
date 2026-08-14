@@ -2,6 +2,7 @@
 
 #include <chrono>
 #include <ctime>
+#include <cstring>
 
 namespace securelink {
 
