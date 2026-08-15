@@ -1,4 +1,5 @@
 #include "sl_file_chunk.h"
+#include "sl_file_meta.h"
 
 #include <string.h>
 

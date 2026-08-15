@@ -19,7 +19,7 @@ std::string read_request(int fd) {
         if (n <= 0) break;
         out.append(buf, buf + n);
         if (out.find("\r\n\r\n") != std::string::npos) break;
-        if (out.size() > 64 * 1024) break;
+        if (out.size() > std::size_t{64} * 1024) break;
     }
     return out;
 }

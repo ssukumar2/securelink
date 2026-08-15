@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "sl_file_meta.h"
 #include "sl_resume_map.h"

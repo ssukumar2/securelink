@@ -13,6 +13,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <unistd.h>
 #include <fstream>
 #include <string>
 #include <vector>
@@ -70,14 +71,14 @@ static int test_full_roundtrip(void) {
     CHECK(last == FileRxResult::kComplete);
     CHECK(r.is_complete());
 
-    std::unlink(kSrc);
+    ::unlink(kSrc);
     std::string dst = std::string(kDir) + "/" + kName;
-    std::unlink(dst.c_str());
+    ::unlink(dst.c_str());
     return 0;
 }
 
 static int test_duplicate_chunk_ignored(void) {
-    CHECK(make_source_file(8 * 1024) == 0);
+    CHECK(make_source_file(std::size_t{8} * 1024) == 0);
 
     FileSender s(kSrc, kName, 4096);
     CHECK(s.open());
@@ -106,14 +107,14 @@ static int test_duplicate_chunk_ignored(void) {
     }
     CHECK(r.is_complete());
 
-    std::unlink(kSrc);
+    ::unlink(kSrc);
     std::string dst = std::string(kDir) + "/" + kName;
-    std::unlink(dst.c_str());
+    ::unlink(dst.c_str());
     return 0;
 }
 
 static int test_resume_after_drop(void) {
-    CHECK(make_source_file(10 * 4096) == 0);
+    CHECK(make_source_file(std::size_t{10} * 4096) == 0);
 
     FileSender s(kSrc, kName, 4096);
     CHECK(s.open());
@@ -143,9 +144,9 @@ static int test_resume_after_drop(void) {
     while (s.has_more()) CHECK(s.send_next_chunk(chunk_fn));
     CHECK(r.is_complete());
 
-    std::unlink(kSrc);
+    ::unlink(kSrc);
     std::string dst = std::string(kDir) + "/" + kName;
-    std::unlink(dst.c_str());
+    ::unlink(dst.c_str());
     return 0;
 }
 

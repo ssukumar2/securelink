@@ -32,7 +32,7 @@ extern "C" {
 #endif
 
 #define SL_RPC_METHOD_MAX 128U
-#define SL_RPC_BODY_MAX   (16U * 1024U)
+#define SL_RPC_BODY_MAX   (16UL * 1024UL)
 
 typedef enum {
     SL_RPC_REQUEST  = 1,
