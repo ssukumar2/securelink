@@ -62,6 +62,7 @@ static int test_rekey_counters(void) {
     mgr.note_rekey_local(id);
     mgr.note_rekey_peer(id);
     auto s = mgr.snapshot(id);
+    CHECK(s.has_value());
     CHECK(s->stats.rekeys_local == 2);
     CHECK(s->stats.rekeys_peer  == 1);
     return 0;
