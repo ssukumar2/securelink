@@ -78,7 +78,7 @@ static int test_full_roundtrip(void) {
 }
 
 static int test_duplicate_chunk_ignored(void) {
-    CHECK(make_source_file(8 * 1024) == 0);
+    CHECK(make_source_file(std::size_t{8} * 1024) == 0);
 
     FileSender s(kSrc, kName, 4096);
     CHECK(s.open());
@@ -114,7 +114,7 @@ static int test_duplicate_chunk_ignored(void) {
 }
 
 static int test_resume_after_drop(void) {
-    CHECK(make_source_file(10 * 4096) == 0);
+    CHECK(make_source_file(std::size_t{10} * 4096) == 0);
 
     FileSender s(kSrc, kName, 4096);
     CHECK(s.open());
