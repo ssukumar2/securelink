@@ -63,9 +63,13 @@ static int test_set_enabled(void) {
     BeaconRegistry r;
     r.upsert(make_entry(3, "gamma", 0x30));
     CHECK(r.set_enabled(3, false));
-    CHECK(r.lookup(3)->enabled == false);
+    auto e1 = r.lookup(3);
+    CHECK(e1.has_value());
+    CHECK(e1->enabled == false);
     CHECK(r.set_enabled(3, true));
-    CHECK(r.lookup(3)->enabled == true);
+    auto e2 = r.lookup(3);
+    CHECK(e2.has_value());
+    CHECK(e2->enabled == true);
     CHECK(!r.set_enabled(999, false));
     return 0;
 }
