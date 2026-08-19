@@ -1,5 +1,6 @@
 #pragma once
 // Prometheus-style metrics registry with counters and gauges.
+#include <cstring>
 //
 // Designed for low-overhead in-process accounting:
 //   - Counters: monotonically increasing; cheap fetch_add.
