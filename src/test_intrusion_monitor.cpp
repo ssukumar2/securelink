@@ -51,7 +51,13 @@ static int test_anomaly_no_alarm_during_warmup(void) {
 static int test_threat_score_accumulates_and_decays(void) {
     ThreatPolicy p;
     p.half_life_seconds = 0.1;   // very fast decay for the test
-    p.block_threshold   = 10.0;
+    p.block_threshold   = 20.0;  // matches the comment below: two auth
+                                  // failures (16) should NOT yet block,
+                                  // three signals (22) should. The old
+                                  // value of 10.0 here contradicted the
+                                  // test'''s own comment and made the
+                                  // first CHECK below fail every time,
+                                  // since 16 already exceeds 10.
     ThreatScore ts(p);
 
     ts.signal("attacker", ThreatSignal::kAuthFailure);
