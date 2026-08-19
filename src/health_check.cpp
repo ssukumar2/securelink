@@ -57,6 +57,10 @@ void HealthCheck::run_all() {
 
 HealthStatus HealthCheck::aggregate() const {
     std::lock_guard<std::mutex> lock(mu_);
+    return aggregate_locked();
+}
+
+HealthStatus HealthCheck::aggregate_locked() const {
     HealthStatus worst = HealthStatus::kHealthy;
     for (const auto& [_, r] : last_) {
         if (static_cast<int>(r.status) > static_cast<int>(worst)) worst = r.status;
@@ -67,7 +71,10 @@ HealthStatus HealthCheck::aggregate() const {
 void HealthCheck::render(std::ostream& os) const {
     std::lock_guard<std::mutex> lock(mu_);
     os << "{\n";
-    os << "  \"status\": \"" << to_string(aggregate()) << "\",\n";
+    // aggregate_locked(), not aggregate() -- this function already holds
+    // mu_, and aggregate() taking the same non-recursive mutex again on
+    // this thread would deadlock forever rather than return.
+    os << "  \"status\": \"" << to_string(aggregate_locked()) << "\",\n";
     os << "  \"probes\": [\n";
     bool first = true;
     for (const auto& [name, r] : last_) {
