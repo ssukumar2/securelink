@@ -10,6 +10,7 @@
 //       -lpthread -lcrypto -o test_tracer
 
 #include <cstdio>
+#include <cstring>
 #include <memory>
 
 #include "tracer.hpp"

@@ -1,3 +1,7 @@
+/* clock_gettime, CLOCK_MONOTONIC, and nanosleep are POSIX, not standard
+ * C11 -- same pattern as sl_lockout.c, sl_dos_guard.c, sl_token_bucket.c. */
+#define _POSIX_C_SOURCE 200809L
+
 #include "sl_clock.h"
 
 #include <errno.h>

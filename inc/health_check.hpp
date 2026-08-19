@@ -50,6 +50,12 @@ public:
     static const char* to_string(HealthStatus s);
 
 private:
+    // Does the actual aggregation without taking mu_ -- callers that
+    // already hold the lock (like render()) must use this instead of
+    // the public aggregate(), which would deadlock trying to re-lock
+    // the same non-recursive mutex on the same thread.
+    HealthStatus aggregate_locked() const;
+
     mutable std::mutex mu_;
     std::unordered_map<std::string, ProbeFn>     probes_;
     std::unordered_map<std::string, ProbeResult> last_;

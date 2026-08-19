@@ -1,5 +1,6 @@
 #ifndef SECURELINK_SL_TRACE_FLAGS_H
 #define SECURELINK_SL_TRACE_FLAGS_H
+#include <stddef.h>
 
 /* Per-span flags propagated along with trace and span IDs.
  *

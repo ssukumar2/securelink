@@ -6,6 +6,7 @@
 //       -o test_handshake_state
 
 #include <cstdio>
+#include <string>
 
 #include "handshake_state.hpp"
 
