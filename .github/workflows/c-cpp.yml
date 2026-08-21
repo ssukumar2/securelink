@@ -54,6 +54,9 @@ jobs:
       - name: Run topic ACL bypass attack
         run: ./build/attack_topic_acl_bypass
 
+      - name: Run all standalone tests
+        run: python3 scripts/run_standalone_tests.py
+
   sanitizers:
     runs-on: ubuntu-latest
 
