@@ -1,9 +1,4 @@
-/* clock_gettime and CLOCK_MONOTONIC are POSIX (POSIX.1-2008), not
- * standard C11 -- glibc hides them under strict -std=c11 unless this
- * feature-test macro is defined first. Same pattern as sl_lockout.c
- * and sl_dos_guard.c. */
-#define _POSIX_C_SOURCE 200809L
-
+#include "sl_posix_compat.h"
 #include "sl_token_bucket.h"
 
 #include <time.h>

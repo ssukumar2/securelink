@@ -1,8 +1,4 @@
-/* clock_gettime and CLOCK_MONOTONIC are POSIX, not standard C11 -- same
- * pattern as sl_lockout.c, sl_dos_guard.c, sl_token_bucket.c, sl_clock.c,
- * sl_event_log.c. */
-#define _POSIX_C_SOURCE 200809L
-
+#include "sl_posix_compat.h"
 #include "sl_deadline.h"
 
 #include <time.h>
