@@ -1,3 +1,7 @@
+/* clock_gettime and CLOCK_REALTIME are POSIX, not standard C11 -- same
+ * pattern as sl_lockout.c, sl_dos_guard.c, sl_token_bucket.c, sl_clock.c. */
+#define _POSIX_C_SOURCE 200809L
+
 #include "sl_event_log.h"
 
 #include <stdio.h>
