@@ -1,7 +1,4 @@
-/* strdup is POSIX (POSIX.1-2008), not standard C11 — glibc hides it under
- * strict -std=c11 unless this feature-test macro is defined first. */
-#define _POSIX_C_SOURCE 200809L
-
+#include "sl_posix_compat.h"
 #include "sl_lockout.h"
 
 #include <stdlib.h>

@@ -1,3 +1,5 @@
+#include "sl_posix_compat.h"
+#include "sl_posix_compat.h"
 #include "sl_event_log.h"
 
 #include <stdio.h>
