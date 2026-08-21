@@ -82,6 +82,17 @@ All 8 attacks and the crypto test currently pass:
 Each one is also wired into CI individually, so a regression in any single
 defense shows up by name, not just as a generic test failure.
 
+Beyond ctest, there are 21 more standalone test files (sessions, streams,
+RPC, pub/sub, file transfer, tracing, health checks, and more) that each
+document their own build command and can be run individually. All 21 now
+also run automatically in CI via `python3 scripts/run_standalone_tests.py`,
+which builds each one using its documented command (compiling every file
+with the compiler that actually matches its language, not just whatever
+the single documented command happens to invoke) and runs it under a
+timeout, since a hang is a real failure mode here, not a hypothetical one
+-- that'''s exactly how a real self-deadlock in `HealthCheck::render()` got
+caught.
+
 ## License
 
 MIT
