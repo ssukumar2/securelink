@@ -73,11 +73,11 @@ All 8 attacks and the crypto test currently pass:
 - `attack_replay_storm` — replayed records get rejected by the sliding window
 - `attack_aead_tamper` — any single-bit tamper of ciphertext, tag, or AAD fails to decrypt
 - `attack_record_fuzz` — 2000 randomly-corrupted records, all rejected
-- `attack_handshake_downgrade` — can'''t force a weaker version than both sides support
+- `attack_handshake_downgrade` — can't force a weaker version than both sides support
 - `attack_brute_force` — lockout with backoff stops repeated credential guesses
 - `attack_dos_flood` — per-source and global connection caps hold under a flood
 - `attack_intrusion_pattern` — a slow, quiet attacker still gets caught by accumulated threat score
-- `attack_topic_acl_bypass` — wildcard and path-traversal tricks can'''t bypass per-identity pub/sub rules
+- `attack_topic_acl_bypass` — wildcard and path-traversal tricks can't bypass per-identity pub/sub rules
 
 Each one is also wired into CI individually, so a regression in any single
 defense shows up by name, not just as a generic test failure.
