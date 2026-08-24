@@ -90,7 +90,7 @@ which builds each one using its documented command (compiling every file
 with the compiler that actually matches its language, not just whatever
 the single documented command happens to invoke) and runs it under a
 timeout, since a hang is a real failure mode here, not a hypothetical one
--- that'''s exactly how a real self-deadlock in `HealthCheck::render()` got
+-- that's exactly how a real self-deadlock in `HealthCheck::render()` got
 caught.
 
 ## License
