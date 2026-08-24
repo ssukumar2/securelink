@@ -18,6 +18,11 @@ kind of bug this project has actually found before (a self-deadlock in
 HealthCheck::render()) -- a hang must be treated as a failure, not left
 to block the whole script forever.
 
+Set STANDALONE_TESTS_ASAN=1 to compile everything with
+-fsanitize=address,undefined instead of a plain build. None of these
+21 files are part of the main CMake build, so this is currently the
+only way any of them ever get memory-checked.
+
 Exits 0 only if every test both builds and passes.
 """
 import os
@@ -29,6 +34,8 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 os.chdir(ROOT)
 
 TIMEOUT_SECONDS = 15
+SANITIZE = os.environ.get("STANDALONE_TESTS_ASAN") == "1"
+SAN_FLAGS = "-fsanitize=address,undefined -g" if SANITIZE else ""
 
 # test_client and test_crypto are already covered by ctest via CMake;
 # no need to duplicate them here.
@@ -75,14 +82,14 @@ def build_and_run(name):
     for src in sources:
         obj = f"/tmp/_std_{os.path.basename(src)}.o"
         compiler = "gcc -std=c11" if src.endswith('.c') else "g++ -std=c++17"
-        cmd = f"{compiler} -Iinc -c {src} -o {obj}"
+        cmd = f"{compiler} {SAN_FLAGS} -Iinc -c {src} -o {obj}"
         r = subprocess.run(cmd, shell=True, capture_output=True, text=True)
         if r.returncode != 0:
             return "COMPILE FAILED", f"{src}:\n{r.stderr[-800:]}"
         objects.append(obj)
 
     binpath = f"/tmp/_std_{name}"
-    link_cmd = f"g++ {' '.join(objects)} {' '.join(libs)} -o {binpath}"
+    link_cmd = f"g++ {SAN_FLAGS} {' '.join(objects)} {' '.join(libs)} -o {binpath}"
     r = subprocess.run(link_cmd, shell=True, capture_output=True, text=True)
     if r.returncode != 0:
         return "LINK FAILED", r.stderr[-800:]
@@ -95,6 +102,9 @@ def build_and_run(name):
     finally:
         if os.path.exists(binpath):
             os.remove(binpath)
+        for obj in objects:
+            if os.path.exists(obj):
+                os.remove(obj)
 
     if r.returncode != 0:
         return "RUNTIME FAILURE", (r.stdout + r.stderr)[-800:]

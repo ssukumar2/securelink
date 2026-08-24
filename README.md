@@ -90,8 +90,15 @@ which builds each one using its documented command (compiling every file
 with the compiler that actually matches its language, not just whatever
 the single documented command happens to invoke) and runs it under a
 timeout, since a hang is a real failure mode here, not a hypothetical one
--- that'''s exactly how a real self-deadlock in `HealthCheck::render()` got
+-- that's exactly how a real self-deadlock in `HealthCheck::render()` got
 caught.
+
+Set `STANDALONE_TESTS_ASAN=1` before running that same script to compile
+and run all 21 under AddressSanitizer and UndefinedBehaviorSanitizer
+instead of a plain build. This is the only memory-safety coverage any of
+these 21 files get, since none of them are part of the main CMake build
+that the `sanitizers` CI job otherwise checks -- so this runs as its own
+step in that same job.
 
 ## License
 
