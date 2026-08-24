@@ -102,6 +102,9 @@ def build_and_run(name):
     finally:
         if os.path.exists(binpath):
             os.remove(binpath)
+        for obj in objects:
+            if os.path.exists(obj):
+                os.remove(obj)
 
     if r.returncode != 0:
         return "RUNTIME FAILURE", (r.stdout + r.stderr)[-800:]
