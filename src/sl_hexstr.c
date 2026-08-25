@@ -1,4 +1,5 @@
 #include "sl_hexstr.h"
+#include "sl_mem.h"
 
 #include <stddef.h>
 #include <stdint.h>
@@ -36,10 +37,9 @@ int sl_hexstr_decode(const char *in, uint8_t *out, size_t expected_len) {
 
 int sl_hexstr_ct_equal(const char *a, const char *b, size_t n) {
     if (!a || !b) return 0;
-    uint8_t diff = 0;
-    for (size_t i = 0; i < n * 2; ++i) {
-        diff |= (uint8_t)(a[i] ^ b[i]);
-    }
-    /* Map nonzero -> 0, zero -> 1, branch-free. */
-    return (int)((1U & ((uint32_t)diff - 1U) >> 8) & 1U);
+    /* Delegate to the one canonical constant-time compare instead of
+     * keeping a second copy of the same branch-free bit trick -- two
+     * independent copies of tricky security logic are how they quietly
+     * drift out of sync over time. */
+    return sl_ct_equal(a, b, n * 2);
 }
