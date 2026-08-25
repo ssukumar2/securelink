@@ -85,9 +85,18 @@ public:
 
         out.type  = static_cast<FrameType>(type);
         out.flags = flags;
+        // Explicit cast, not an implicit narrowing conversion: `total` is
+        // std::size_t (unsigned) but iterator arithmetic needs the
+        // vector's signed difference_type. In practice `total` is always
+        // small here -- length was already checked against max_frame_
+        // above -- but max_frame_ is caller-configurable, so this makes
+        // the conversion visible instead of silently implementation-
+        // defined if someone ever configures an unreasonably large one.
+        const auto total_offset =
+            static_cast<std::vector<std::uint8_t>::difference_type>(total);
         out.payload.assign(buf_.begin() + constants::FRAME_HEADER_SIZE,
-                           buf_.begin() + total);
-        buf_.erase(buf_.begin(), buf_.begin() + total);
+                           buf_.begin() + total_offset);
+        buf_.erase(buf_.begin(), buf_.begin() + total_offset);
         return ParseStatus::kReady;
     }
 
