@@ -1,6 +1,7 @@
 #include "cli_args.hpp"
 
 #include <cstdlib>
+#include <limits>
 #include <stdexcept>
 #include <string_view>
 
@@ -68,7 +69,17 @@ std::uint32_t CliArgs::get_u32(const std::string& name, std::uint32_t fb) const 
     if (!v) return fb;
     try {
         const unsigned long u = std::stoul(*v);
+        // stoul only throws if the value doesn'''t fit in `unsigned long`
+        // itself (typically 64-bit on this platform) -- a value that
+        // fits in 64 bits but exceeds UINT32_MAX would otherwise get
+        // silently truncated by the cast below instead of rejected.
+        // (99999999999 silently became 1215752191 before this check.)
+        if (u > std::numeric_limits<std::uint32_t>::max()) {
+            throw CliError("value for --" + name + " exceeds u32 range");
+        }
         return static_cast<std::uint32_t>(u);
+    } catch (const CliError&) {
+        throw;
     } catch (...) {
         throw CliError("invalid u32 for --" + name);
     }

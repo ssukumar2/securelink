@@ -8,6 +8,7 @@
 //
 // Unknown flags are an error. Positional args are collected separately.
 
+#include <cstdint>
 #include <optional>
 #include <stdexcept>
 #include <string>
