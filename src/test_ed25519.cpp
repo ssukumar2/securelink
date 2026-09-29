@@ -24,18 +24,18 @@ int main(void) {
 
     const char *msg = "this is the handshake transcript hash, signed";
     uint8_t sig[SL_ED25519_SIG_LEN];
-    if (sl_ed25519_sign(priv, (const uint8_t*)msg, strlen(msg), sig) != 0) {
+    if (sl_ed25519_sign(priv, reinterpret_cast<const uint8_t*>(msg), strlen(msg), sig) != 0) {
         printf("FAIL: signing failed\n"); return 1;
     }
 
-    if (sl_ed25519_verify(pub, (const uint8_t*)msg, strlen(msg), sig) != 0) {
+    if (sl_ed25519_verify(pub, reinterpret_cast<const uint8_t*>(msg), strlen(msg), sig) != 0) {
         printf("FAIL: valid signature failed to verify\n"); fail = 1;
     } else {
         printf("PASS: valid signature verifies correctly\n");
     }
 
     const char *tampered_msg = "this is the handshake transcript hash, SIGNED";
-    if (sl_ed25519_verify(pub, (const uint8_t*)tampered_msg, strlen(tampered_msg), sig) == 0) {
+    if (sl_ed25519_verify(pub, reinterpret_cast<const uint8_t*>(tampered_msg), strlen(tampered_msg), sig) == 0) {
         printf("FAIL: signature verified against a DIFFERENT message\n"); fail = 1;
     } else {
         printf("PASS: signature correctly rejected for a tampered message\n");
@@ -44,7 +44,7 @@ int main(void) {
     uint8_t priv2[SL_ED25519_PRIVKEY_LEN];
     uint8_t pub2[SL_ED25519_PUBKEY_LEN];
     sl_ed25519_keypair_new(priv2, pub2);
-    if (sl_ed25519_verify(pub2, (const uint8_t*)msg, strlen(msg), sig) == 0) {
+    if (sl_ed25519_verify(pub2, reinterpret_cast<const uint8_t*>(msg), strlen(msg), sig) == 0) {
         printf("FAIL: signature verified under a DIFFERENT peer's public key\n"); fail = 1;
     } else {
         printf("PASS: signature correctly rejected under the wrong public key\n");
@@ -53,7 +53,7 @@ int main(void) {
     uint8_t corrupted_sig[SL_ED25519_SIG_LEN];
     memcpy(corrupted_sig, sig, sizeof(sig));
     corrupted_sig[0] ^= 0x01;
-    if (sl_ed25519_verify(pub, (const uint8_t*)msg, strlen(msg), corrupted_sig) == 0) {
+    if (sl_ed25519_verify(pub, reinterpret_cast<const uint8_t*>(msg), strlen(msg), corrupted_sig) == 0) {
         printf("FAIL: a single flipped bit in the signature still verified\n"); fail = 1;
     } else {
         printf("PASS: a single flipped signature bit correctly fails verification\n");
