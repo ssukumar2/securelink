@@ -54,7 +54,7 @@ int main(void) {
     }
 
     sl_session_keys_clear(&a);
-    uint8_t zeros[sizeof(a)] = {0};
+    const uint8_t zeros[sizeof(a)] = {0};
     if (memcmp(&a, zeros, sizeof(a)) != 0) {
         printf("FAIL: clear() did not zero the struct\n"); fail = 1;
     } else {
