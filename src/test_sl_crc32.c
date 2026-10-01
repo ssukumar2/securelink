@@ -28,7 +28,7 @@ static int test_known_vectors(void) {
     CHECK(sl_crc32c(s, 9) == 0xE3069283u);
 
     /* CRC-32C of 32 bytes of zero. */
-    uint8_t zeros[32] = {0};
+    const uint8_t zeros[32] = {0};
     /* Reference (published): 0x8a9136aa */
     CHECK(sl_crc32c(zeros, 32) == 0x8A9136AAu);
 

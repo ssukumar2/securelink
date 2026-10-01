@@ -38,7 +38,7 @@ static int test_advance_produces_new_secret_and_keys(void) {
     /* New secret must differ from old. */
     CHECK(memcmp(before, after, 32) != 0);
     /* Old secret buffer must have been zeroed. */
-    uint8_t zero[32] = {0};
+    const uint8_t zero[32] = {0};
     CHECK(memcmp(secret, zero, 32) == 0);
     /* Keys must have changed. */
     CHECK(memcmp(keys.c2s_key, old_c2s, 32) != 0);
