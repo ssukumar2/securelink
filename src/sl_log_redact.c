@@ -93,10 +93,9 @@ int sl_log_redact_ipv4(const char *in, char *out, size_t out_cap) {
         /* Try to match d{1,3}.d{1,3}.d{1,3}.d{1,3} */
         size_t j = i;
         int    dots = 0;
-        int    digits_in_segment = 0;
         int    looks_like_ipv4 = 1;
         for (int seg = 0; seg < 4 && looks_like_ipv4; ++seg) {
-            digits_in_segment = 0;
+            int digits_in_segment = 0;
             while (in[j] >= '0' && in[j] <= '9' && digits_in_segment < 3) {
                 ++j; ++digits_in_segment;
             }
