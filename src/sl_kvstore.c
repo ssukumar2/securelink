@@ -86,7 +86,7 @@ static int write_record(FILE *fp,
     if (fwrite(hdr, 1, (size_t)hp, fp) != (size_t)hp) return -1;
     if (fwrite(key, 1, klen, fp) != klen)              return -1;
     if (vlen > 0 && fwrite(value, 1, vlen, fp) != vlen) return -1;
-    uint8_t crc_buf[4] = {
+    const uint8_t crc_buf[4] = {
         (uint8_t)(crc_final >> 24), (uint8_t)(crc_final >> 16),
         (uint8_t)(crc_final >> 8),  (uint8_t)(crc_final),
     };
