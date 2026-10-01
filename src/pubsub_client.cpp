@@ -88,7 +88,7 @@ bool PubSubClient::on_message(const std::vector<std::uint8_t>& wire_bytes) {
         return true;
     }
 
-    const std::string topic((const char*)m.topic, m.topic_len);
+    const std::string topic(reinterpret_cast<const char*>(m.topic), m.topic_len);
     std::vector<std::uint8_t> payload;
     if (m.payload_len > 0) {
         payload.assign(m.payload, m.payload + m.payload_len);
