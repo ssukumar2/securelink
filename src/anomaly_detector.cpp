@@ -13,16 +13,16 @@ AnomalyDetector::AnomalyDetector(double alpha,
       warmup_(warmup_samples) {
     // These two parameters are both `double` with no way for the
     // compiler to catch a caller accidentally swapping them -- and a
-    // swap wouldn'''t crash, it would silently misconfigure the detector
+    // swap wouldn't crash, it would silently misconfigure the detector
     // (alpha clamped to 1.0 means no smoothing at all; z_threshold this
     // low means nearly everything reads as anomalous). The clamps below
     // already existed to handle genuinely-out-of-range input; asserting
     // first makes a swap (or any other implausible config) loud in
     // debug/test builds instead of quietly "fixing" it and moving on.
     assert(alpha > 0.0 && alpha <= 1.0 &&
-           "alpha out of (0,1] range -- check this isn'''t swapped with z_threshold");
+           "alpha out of (0,1] range -- check this isn't swapped with z_threshold");
     assert(z_threshold > 0.0 &&
-           "z_threshold must be positive -- check this isn'''t swapped with alpha");
+           "z_threshold must be positive -- check this isn't swapped with alpha");
 
     if (alpha_ <= 0.0)        alpha_ = 1e-6;
     if (alpha_ >  1.0)        alpha_ = 1.0;

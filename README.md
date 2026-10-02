@@ -82,9 +82,11 @@ All 8 attacks and the crypto test currently pass:
 Each one is also wired into CI individually, so a regression in any single
 defense shows up by name, not just as a generic test failure.
 
-Beyond ctest, there are 21 more standalone test files (sessions, streams,
-RPC, pub/sub, file transfer, tracing, health checks, and more) that each
-document their own build command and can be run individually. All 21 now
+Beyond ctest, there are 27 more standalone test files (sessions, streams,
+RPC, pub/sub, file transfer, tracing, health checks, the full crypto core --
+ECDH, Ed25519, transcript hashing, the Finished MAC's handshake-secret
+schedule and rekey epochs -- and more) that each document their own build
+command and can be run individually. All 27 now
 also run automatically in CI via `python3 scripts/run_standalone_tests.py`,
 which builds each one using its documented command (compiling every file
 with the compiler that actually matches its language, not just whatever
@@ -94,9 +96,9 @@ timeout, since a hang is a real failure mode here, not a hypothetical one
 caught.
 
 Set `STANDALONE_TESTS_ASAN=1` before running that same script to compile
-and run all 21 under AddressSanitizer and UndefinedBehaviorSanitizer
+and run all 27 under AddressSanitizer and UndefinedBehaviorSanitizer
 instead of a plain build. This is the only memory-safety coverage any of
-these 21 files get, since none of them are part of the main CMake build
+these 27 files get, since none of them are part of the main CMake build
 that the `sanitizers` CI job otherwise checks -- so this runs as its own
 step in that same job.
 

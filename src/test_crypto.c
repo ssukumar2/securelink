@@ -46,7 +46,7 @@ int main(void)
     TEST("both sides derive same secret", memcmp(secret1, secret2, 32) == 0);
 
     /* Test 7: AES encrypt then decrypt */
-    uint8_t plaintext[16] = "U2VjbG91cyBHbWJI";
+    const uint8_t plaintext[16] = "U2VjbG91cyBHbWJI";
     uint8_t ciphertext[16];
     uint8_t decrypted[16];
 

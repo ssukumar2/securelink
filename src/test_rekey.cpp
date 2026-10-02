@@ -47,7 +47,7 @@ int main(void) {
         printf("PASS: session keys actually rotated\n");
     }
 
-    uint8_t zeros32[32] = {0};
+    const uint8_t zeros32[32] = {0};
     if (memcmp(secret, zeros32, 32) != 0) {
         printf("FAIL: old secret was not zeroed by sl_rekey_advance\n"); fail = 1;
     } else {

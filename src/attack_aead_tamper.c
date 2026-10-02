@@ -51,7 +51,8 @@ static int attack_flip_ciphertext_byte(void) {
 }
 
 static int attack_flip_tag_byte(void) {
-    uint8_t key[32], iv[12], pt[16] = "secret payload!", ct[16], tag[16], out[16];
+    uint8_t key[32], iv[12], ct[16], tag[16], out[16];
+    const uint8_t pt[16] = "secret payload!";
     sl_rng_init(); sl_rng_bytes(key, 32); sl_rng_bytes(iv, 12);
     CHECK(seal_sample(key, iv, NULL, 0, pt, 15, ct, tag) == 0, "flip_tag");
 
@@ -85,7 +86,7 @@ static int attack_cross_session_nonce_reuse(void) {
      * other's tag must fail. (Also documents why nonce reuse is fatal:
      * if attacker could reuse the SAME nonce, they could XOR-recover pt.) */
     uint8_t key[32], iv[12];
-    uint8_t pt_a[5] = "AAAAA", pt_b[5] = "BBBBB";
+    const uint8_t pt_a[5] = "AAAAA", pt_b[5] = "BBBBB";
     uint8_t ct_a[5], ct_b[5], tag_a[16], tag_b[16], out[5];
     sl_rng_init(); sl_rng_bytes(key, 32); sl_rng_bytes(iv, 12);
 

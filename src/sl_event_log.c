@@ -30,7 +30,7 @@ static int read_u32_be(FILE *fp, uint32_t *out) {
 }
 
 static void write_u32_be(FILE *fp, uint32_t v) {
-    uint8_t b[4] = {
+    const uint8_t b[4] = {
         (uint8_t)(v >> 24), (uint8_t)(v >> 16),
         (uint8_t)(v >>  8), (uint8_t)v
     };
