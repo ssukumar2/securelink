@@ -55,7 +55,7 @@ static int test_threat_score_accumulates_and_decays(void) {
                                   // failures (16) should NOT yet block,
                                   // three signals (22) should. The old
                                   // value of 10.0 here contradicted the
-                                  // test'''s own comment and made the
+                                  // test's own comment and made the
                                   // first CHECK below fail every time,
                                   // since 16 already exceeds 10.
     ThreatScore ts(p);

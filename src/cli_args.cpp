@@ -69,7 +69,7 @@ std::uint32_t CliArgs::get_u32(const std::string& name, std::uint32_t fb) const 
     if (!v) return fb;
     try {
         const unsigned long u = std::stoul(*v);
-        // stoul only throws if the value doesn'''t fit in `unsigned long`
+        // stoul only throws if the value doesn't fit in `unsigned long`
         // itself (typically 64-bit on this platform) -- a value that
         // fits in 64 bits but exceeds UINT32_MAX would otherwise get
         // silently truncated by the cast below instead of rejected.
